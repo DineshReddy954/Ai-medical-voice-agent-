@@ -4,3 +4,10 @@ uvicorn
 transformers
 torch
 pydantic
+
+def safety_check(text):
+    risk_keywords = ["chest pain", "suicide", "heart attack", "severe bleeding"]
+    for word in risk_keywords:
+        if word in text.lower():
+            return True
+    return False
