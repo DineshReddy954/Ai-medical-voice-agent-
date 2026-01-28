@@ -1,6 +1,20 @@
 
-fastapi
-uvicorn
-transformers
-torch
-pydantic
+def safety_check(text):
+    risk_keywords = ["chest pain", "suicide", "heart attack", "severe bleeding"]
+    for word in risk_keywords:
+        if word in text.lower():
+            return True
+    return False
+from transformers import pipeline
+
+generator = pipeline("text-generation", model="distilgpt2")
+
+def generate_response(user_text):
+    prompt = (
+        "You are an AI medical voice assistant. "
+        "Provide general health guidance only. "
+        "Do not diagnose. Always suggest consulting a doctor.\n\n"
+        f"User: {user_text}\nAI:"
+    )
+    output = generator(prompt, max_length=120)
+    return output[0]["generated_text"].split("AI:")[-1]
